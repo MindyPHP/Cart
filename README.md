@@ -4,6 +4,7 @@
 [![codecov](https://codecov.io/gh/MindyPHP/Cart/branch/master/graph/badge.svg)](https://codecov.io/gh/MindyPHP/Cart)
 [![Latest Stable Version](https://poser.pugx.org/mindy/cart/v/stable.svg)](https://packagist.org/packages/mindy/cart)
 [![Total Downloads](https://poser.pugx.org/mindy/cart/downloads.svg)](https://packagist.org/packages/mindy/cart)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FMindyPHP%2FCart.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FMindyPHP%2FCart?ref=badge_shield)
 
 ## Установка
 
@@ -126,3 +127,7 @@ $cart->setPosition($position->generateUniqueId(), $position);
 
 assert(2 === $cart->getQuantity());
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FMindyPHP%2FCart.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FMindyPHP%2FCart?ref=badge_large)
