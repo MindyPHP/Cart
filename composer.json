@@ -1,0 +1,29 @@
+{
+    "name": "mindy/cart",
+    "description": "Shopping Cart component",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Mindy\\Cart\\": ""
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Maksim Falaleev",
+            "email": "max@studio107.ru"
+        }
+    ],
+    "suggest": {
+        "symfony/http-foundation": "Cart component with symfony session storage"
+    },
+    "require": {
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5",
+        "symfony/http-foundation": "~3.0"
+    }
+}
