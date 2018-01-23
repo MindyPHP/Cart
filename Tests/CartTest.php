@@ -29,25 +29,9 @@ class CartTest extends TestCase
             ->getMockBuilder(ProductInterface::class)
             ->getMock();
         $product->method('getPrice')->willReturn(100);
-        $product->method('getSku')->willReturn('foobar');
+        $product->method('getUniqueId')->willReturn('foobar');
 
         return $product;
-    }
-
-    public function testPosition()
-    {
-        $product = $this->getProduct();
-        $position = new Position($product);
-
-        $this->assertInstanceOf(ProductInterface::class, $position->getProduct());
-        $this->assertSame($product->getSku(), $position->generateUniqueId());
-
-        $this->assertSame(100.00, $position->getPrice());
-        $this->assertSame(1, $position->getQuantity());
-
-        $position->setQuantity(2);
-        $this->assertSame(200.00, $position->getPrice());
-        $this->assertSame(2, $position->getQuantity());
     }
 
     public function testCart()
@@ -67,12 +51,12 @@ class CartTest extends TestCase
         $cart->setPosition($position->generateUniqueId(), $position);
 
         $this->assertCount(1, $cart->getPositions());
-        $this->assertTrue($cart->hasPosition('foobar'));
-        $this->assertInstanceOf(PositionInterface::class, $cart->getPosition('foobar'));
+        $this->assertTrue($cart->hasPosition('091d0891163b8372709c08164bd4ee4b'));
+        $this->assertInstanceOf(PositionInterface::class, $cart->getPosition('091d0891163b8372709c08164bd4ee4b'));
         $this->assertSame(100.0, $cart->getPrice());
         $this->assertSame(1, $cart->getQuantity());
 
-        $cart->removePosition('foobar');
+        $cart->removePosition('091d0891163b8372709c08164bd4ee4b');
         $this->assertCount(0, $cart->getPositions());
 
         $position = new Position($product);
@@ -85,7 +69,7 @@ class CartTest extends TestCase
         $position = new Position($product);
         $cart->setPosition($position->generateUniqueId(), $position);
         $this->assertSame(1, $cart->getQuantity());
-        $cart->setPositionQuantity('foobar', 2);
+        $cart->setPositionQuantity('091d0891163b8372709c08164bd4ee4b', 2);
         $this->assertSame(2, $cart->getQuantity());
     }
 }

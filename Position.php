@@ -18,6 +18,10 @@ class Position implements PositionInterface
      */
     protected $product;
     /**
+     * @var array
+     */
+    protected $options = [];
+    /**
      * @var int
      */
     protected $quantity = 1;
@@ -26,11 +30,13 @@ class Position implements PositionInterface
      * Position constructor.
      * @param ProductInterface $product
      * @param int $quantity
+     * @param array $options
      */
-    public function __construct(ProductInterface $product, int $quantity = 1)
+    public function __construct(ProductInterface $product, int $quantity = 1, array $options = [])
     {
         $this->product = $product;
         $this->quantity = $quantity;
+        $this->options = $options;
     }
 
     /**
@@ -62,7 +68,7 @@ class Position implements PositionInterface
      */
     public function generateUniqueId(): string
     {
-        return $this->product->getSku();
+        return md5(sprintf("%s:%s", $this->product->getUniqueId(), serialize($this->options)));
     }
 
     /**
@@ -71,5 +77,15 @@ class Position implements PositionInterface
     public function setQuantity(int $quantity)
     {
         $this->quantity = $quantity;
+    }
+
+    /**
+     * Return array of options for product
+     *
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
     }
 }

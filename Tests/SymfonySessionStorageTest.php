@@ -26,7 +26,7 @@ class SymfonySessionStorageTest extends TestCase
             ->getMockBuilder(ProductInterface::class)
             ->getMock();
         $product->method('getPrice')->willReturn(100);
-        $product->method('getSku')->willReturn('foobar');
+        $product->method('getUniqueId')->willReturn('foobar');
 
         $session = new Session(new MockArraySessionStorage());
         $storage = new SymfonySessionStorage($session);
@@ -39,8 +39,8 @@ class SymfonySessionStorageTest extends TestCase
         $storage->setPosition($position->generateUniqueId(), $position);
 
         $this->assertCount(1, $storage->getPositions());
-        $this->assertNotNull($storage->getPosition('foobar'));
-        $this->assertTrue($storage->hasPosition('foobar'));
+        $this->assertNotNull($storage->getPosition('091d0891163b8372709c08164bd4ee4b'));
+        $this->assertTrue($storage->hasPosition('091d0891163b8372709c08164bd4ee4b'));
 
         $storage->clear();
         $this->assertCount(0, $storage->getPositions());
@@ -48,7 +48,7 @@ class SymfonySessionStorageTest extends TestCase
         $storage->setPosition($position->generateUniqueId(), $position);
         $this->assertCount(1, $storage->getPositions());
 
-        $storage->removePosition('foobar');
+        $storage->removePosition('091d0891163b8372709c08164bd4ee4b');
 
         $this->assertCount(0, $storage->getPositions());
     }

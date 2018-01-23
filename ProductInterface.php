@@ -16,10 +16,10 @@ interface ProductInterface
     /**
      * @return float
      */
-    public function getPrice();
+    public function getPrice(): float;
 
     /**
      * @return string
      */
-    public function getSku();
+    public function getUniqueId(): string;
 }

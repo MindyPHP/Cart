@@ -42,4 +42,11 @@ interface PositionInterface
      * @param int $quantity
      */
     public function setQuantity(int $quantity);
+
+    /**
+     * Return array of options for product
+     *
+     * @return array
+     */
+    public function getOptions(): array;
 }
