@@ -127,3 +127,7 @@ $cart->setPosition($position->generateUniqueId(), $position);
 
 assert(2 === $cart->getQuantity());
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FMindyPHP%2FCart.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FMindyPHP%2FCart?ref=badge_large)
