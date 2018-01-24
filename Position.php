@@ -66,7 +66,7 @@ class Position implements PositionInterface
     /**
      * {@inheritdoc}
      */
-    public function generateUniqueId(): string
+    public function getUniqueId(): string
     {
         return md5(sprintf("%s:%s", $this->product->getUniqueId(), serialize($this->options)));
     }

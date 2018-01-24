@@ -36,7 +36,7 @@ interface PositionInterface
     /**
      * @return string
      */
-    public function generateUniqueId(): string;
+    public function getUniqueId(): string;
 
     /**
      * @param int $quantity

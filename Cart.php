@@ -33,9 +33,9 @@ class Cart implements CartInterface
     /**
      * {@inheritdoc}
      */
-    public function getPositions(): array
+    public function all(): array
     {
-        return $this->storage->getPositions();
+        return $this->storage->all();
     }
 
     /**
@@ -45,7 +45,7 @@ class Cart implements CartInterface
     {
         return array_sum(array_map(function (PositionInterface $position) {
             return $position->getQuantity();
-        }, $this->getPositions()));
+        }, $this->all()));
     }
 
     /**
@@ -55,48 +55,40 @@ class Cart implements CartInterface
     {
         return array_sum(array_map(function (PositionInterface $position) {
             return $position->getPrice();
-        }, $this->getPositions()));
+        }, $this->all()));
     }
 
     /**
      * @param $key
      * @param PositionInterface $position
      */
-    public function setPosition(string $key, PositionInterface $position)
+    public function set(string $key, PositionInterface $position)
     {
-        $this->storage->setPosition($key, $position);
+        $this->storage->set($key, $position);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function removePosition(string $key)
+    public function remove(string $key)
     {
-        $this->storage->removePosition($key);
+        $this->storage->remove($key);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasPosition(string $key): bool
+    public function has(string $key): bool
     {
-        return $this->storage->hasPosition($key);
-    }
-
-    /**
-     * @return CartStorageInterface
-     */
-    public function getStorage(): CartStorageInterface
-    {
-        return $this->storage;
+        return $this->storage->has($key);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPosition(string $key)
+    public function get(string $key)
     {
-        return $this->storage->getPosition($key);
+        return $this->storage->get($key);
     }
 
     /**
@@ -111,11 +103,11 @@ class Cart implements CartInterface
      * @param string $key
      * @param int $quantity
      */
-    public function setPositionQuantity(string $key, int $quantity)
+    public function setQuantity(string $key, int $quantity)
     {
-        $position = $this->getPosition($key);
+        $position = $this->get($key);
         $position->setQuantity($quantity);
 
-        $this->storage->setPosition($key, $position);
+        $this->storage->set($key, $position);
     }
 }

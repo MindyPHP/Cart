@@ -36,7 +36,7 @@ class SymfonySessionStorage implements CartStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function getPositions(): array
+    public function all(): array
     {
         return $this->session->get(self::SESSION_KEY, []);
     }
@@ -44,9 +44,9 @@ class SymfonySessionStorage implements CartStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function removePosition(string $key)
+    public function remove(string $key)
     {
-        $positions = $this->getPositions();
+        $positions = $this->all();
         unset($positions[$key]);
 
         $this->session->set(self::SESSION_KEY, $positions);
@@ -55,18 +55,18 @@ class SymfonySessionStorage implements CartStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function hasPosition(string $key): bool
+    public function has(string $key): bool
     {
-        return array_key_exists($key, $this->getPositions());
+        return array_key_exists($key, $this->all());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPosition(string $key)
+    public function get(string $key)
     {
-        if ($this->hasPosition($key)) {
-            $positions = $this->getPositions();
+        if ($this->has($key)) {
+            $positions = $this->all();
 
             return $positions[$key];
         }
@@ -85,9 +85,9 @@ class SymfonySessionStorage implements CartStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function setPosition(string $key, PositionInterface $position)
+    public function set(string $key, PositionInterface $position)
     {
-        $positions = $this->getPositions();
+        $positions = $this->all();
         $positions[$key] = $position;
 
         $this->session->set(self::SESSION_KEY, $positions);

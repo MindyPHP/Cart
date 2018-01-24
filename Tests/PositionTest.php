@@ -31,7 +31,7 @@ class PositionTest extends TestCase
         $position = new Position($product);
 
         $this->assertInstanceOf(ProductInterface::class, $position->getProduct());
-        $this->assertSame('091d0891163b8372709c08164bd4ee4b', $position->generateUniqueId());
+        $this->assertSame('091d0891163b8372709c08164bd4ee4b', $position->getUniqueId());
 
         $this->assertSame(100.00, $position->getPrice());
         $this->assertSame(1, $position->getQuantity());
@@ -49,7 +49,7 @@ class PositionTest extends TestCase
         $position = new Position($product, 1, ['memory' => '2', 'cpu' => 'intel xeon']);
 
         $this->assertInstanceOf(ProductInterface::class, $position->getProduct());
-        $this->assertSame('a971f3a2fe71378f3a97dc454f770dc4', $position->generateUniqueId());
+        $this->assertSame('a971f3a2fe71378f3a97dc454f770dc4', $position->getUniqueId());
 
         $this->assertSame(100.00, $position->getPrice());
         $this->assertSame(1, $position->getQuantity());
@@ -58,7 +58,7 @@ class PositionTest extends TestCase
         $position = new Position($product, 1, ['memory' => '4', 'cpu' => 'intel xeon']);
 
         $this->assertInstanceOf(ProductInterface::class, $position->getProduct());
-        $this->assertSame('30725a68944225e92af286ff31461711', $position->generateUniqueId());
+        $this->assertSame('30725a68944225e92af286ff31461711', $position->getUniqueId());
 
         $this->assertSame(100.00, $position->getPrice());
         $this->assertSame(1, $position->getQuantity());

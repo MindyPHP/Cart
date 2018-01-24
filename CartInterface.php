@@ -19,7 +19,7 @@ interface CartInterface extends CartStorageInterface
      * @param string $key
      * @param int $quantity
      */
-    public function setPositionQuantity(string $key, int $quantity);
+    public function setQuantity(string $key, int $quantity);
 
     /**
      * @return int

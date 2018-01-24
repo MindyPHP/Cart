@@ -31,7 +31,7 @@ class NativeSessionStorage implements CartStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function getPositions(): array
+    public function all(): array
     {
         return $_SESSION[self::SESSION_KEY];
     }
@@ -39,9 +39,9 @@ class NativeSessionStorage implements CartStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function removePosition(string $key)
+    public function remove(string $key)
     {
-        $positions = $this->getPositions();
+        $positions = $this->all();
         unset($positions[$key]);
 
         $_SESSION[self::SESSION_KEY] = $positions;
@@ -50,18 +50,18 @@ class NativeSessionStorage implements CartStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function hasPosition(string $key): bool
+    public function has(string $key): bool
     {
-        return array_key_exists($key, $this->getPositions());
+        return array_key_exists($key, $this->all());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPosition(string $key)
+    public function get(string $key)
     {
-        if ($this->hasPosition($key)) {
-            $positions = $this->getPositions();
+        if ($this->has($key)) {
+            $positions = $this->all();
 
             return $positions[$key];
         }
@@ -80,9 +80,9 @@ class NativeSessionStorage implements CartStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function setPosition(string $key, PositionInterface $position)
+    public function set(string $key, PositionInterface $position)
     {
-        $positions = $this->getPositions();
+        $positions = $this->all();
         $positions[$key] = $position;
 
         $_SESSION[self::SESSION_KEY] = $positions;

@@ -39,37 +39,35 @@ class CartTest extends TestCase
         $session = new Session(new MockArraySessionStorage());
         $cart = new Cart(new SymfonySessionStorage($session));
 
-        $this->assertInstanceOf(CartStorageInterface::class, $cart->getStorage());
-
         $this->assertSame(0.0, $cart->getPrice());
         $this->assertSame(0, $cart->getQuantity());
 
-        $this->assertCount(0, $cart->getPositions());
+        $this->assertCount(0, $cart->all());
 
         $product = $this->getProduct();
         $position = new Position($product);
-        $cart->setPosition($position->generateUniqueId(), $position);
+        $cart->set($position->getUniqueId(), $position);
 
-        $this->assertCount(1, $cart->getPositions());
-        $this->assertTrue($cart->hasPosition('091d0891163b8372709c08164bd4ee4b'));
-        $this->assertInstanceOf(PositionInterface::class, $cart->getPosition('091d0891163b8372709c08164bd4ee4b'));
+        $this->assertCount(1, $cart->all());
+        $this->assertTrue($cart->has('091d0891163b8372709c08164bd4ee4b'));
+        $this->assertInstanceOf(PositionInterface::class, $cart->get('091d0891163b8372709c08164bd4ee4b'));
         $this->assertSame(100.0, $cart->getPrice());
         $this->assertSame(1, $cart->getQuantity());
 
-        $cart->removePosition('091d0891163b8372709c08164bd4ee4b');
-        $this->assertCount(0, $cart->getPositions());
+        $cart->remove('091d0891163b8372709c08164bd4ee4b');
+        $this->assertCount(0, $cart->all());
 
         $position = new Position($product);
-        $cart->setPosition($position->generateUniqueId(), $position);
-        $this->assertCount(1, $cart->getPositions());
+        $cart->set($position->getUniqueId(), $position);
+        $this->assertCount(1, $cart->all());
 
         $cart->clear();
-        $this->assertCount(0, $cart->getPositions());
+        $this->assertCount(0, $cart->all());
 
         $position = new Position($product);
-        $cart->setPosition($position->generateUniqueId(), $position);
+        $cart->set($position->getUniqueId(), $position);
         $this->assertSame(1, $cart->getQuantity());
-        $cart->setPositionQuantity('091d0891163b8372709c08164bd4ee4b', 2);
+        $cart->setQuantity('091d0891163b8372709c08164bd4ee4b', 2);
         $this->assertSame(2, $cart->getQuantity());
     }
 }

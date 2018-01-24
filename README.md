@@ -90,13 +90,13 @@ use Mindy\Cart\Position;
 
 $product = new SimpleProduct(['price' => 100, 'uniqueId' => 'foo']);
 $position = new Position($product, 1, ['cpu' => 'xeon', 'memory' => '4']);
-$cart->setPosition($position->generateUniqueId(), $position);
+$cart->set($position->generateUniqueId(), $position);
 ```
 
 ### Удаление позиции
 
 ```php
-$cart->removePosition($key);
+$cart->remove($key);
 ```
 
 ### Изменение количества
@@ -105,9 +105,9 @@ $cart->removePosition($key);
 // Обновление количества товара в позиции
 $position = $cart->getPosition('foo');
 $position->setQuantity(1);
-$cart->setPosition($position->generateUniqueId(), $position);
+$cart->set($position->generateUniqueId(), $position);
 // или
-$cart->setPositionQuantity('foo', 1);
+$cart->setQuantity('foo', 1);
 ```
 
 ### Опции 
@@ -120,10 +120,10 @@ use Mindy\Cart\Position;
 $product = new SimpleProduct(['price' => 100, 'uniqueId' => 'foo']);
 
 $position = new Position($product, 1, ['cpu' => 'xeon', 'memory' => '4']);
-$cart->setPosition($position->generateUniqueId(), $position);
+$cart->set($position->generateUniqueId(), $position);
 
 $position = new Position($product, 1, ['cpu' => 'xeon', 'memory' => '2']);
-$cart->setPosition($position->generateUniqueId(), $position);
+$cart->set($position->generateUniqueId(), $position);
 
 assert(2 === $cart->getQuantity());
 ```

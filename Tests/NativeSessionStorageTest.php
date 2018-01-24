@@ -28,25 +28,25 @@ class NativeSessionStorageTest extends TestCase
 
         $storage = new NativeSessionStorage();
 
-        $this->assertSame([], $storage->getPositions());
-        $this->assertNull($storage->getPosition('foo'));
-        $this->assertFalse($storage->hasPosition('foo'));
+        $this->assertSame([], $storage->all());
+        $this->assertNull($storage->get('foo'));
+        $this->assertFalse($storage->has('foo'));
 
         $position = new Position($product);
-        $storage->setPosition($position->generateUniqueId(), $position);
+        $storage->set($position->getUniqueId(), $position);
 
-        $this->assertCount(1, $storage->getPositions());
-        $this->assertNotNull($storage->getPosition('091d0891163b8372709c08164bd4ee4b'));
-        $this->assertTrue($storage->hasPosition('091d0891163b8372709c08164bd4ee4b'));
+        $this->assertCount(1, $storage->all());
+        $this->assertNotNull($storage->get('091d0891163b8372709c08164bd4ee4b'));
+        $this->assertTrue($storage->has('091d0891163b8372709c08164bd4ee4b'));
 
         $storage->clear();
-        $this->assertCount(0, $storage->getPositions());
+        $this->assertCount(0, $storage->all());
 
-        $storage->setPosition($position->generateUniqueId(), $position);
-        $this->assertCount(1, $storage->getPositions());
+        $storage->set($position->getUniqueId(), $position);
+        $this->assertCount(1, $storage->all());
 
-        $storage->removePosition('091d0891163b8372709c08164bd4ee4b');
+        $storage->remove('091d0891163b8372709c08164bd4ee4b');
 
-        $this->assertCount(0, $storage->getPositions());
+        $this->assertCount(0, $storage->all());
     }
 }
