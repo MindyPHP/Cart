@@ -79,9 +79,11 @@ class SymfonySessionStorage implements CartStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function clear()
+    public function clear(): bool
     {
         $this->session->remove(self::SESSION_KEY);
+
+        return count($this->all()) === 0;
     }
 
     /**

@@ -51,6 +51,8 @@ interface CartStorageInterface
 
     /**
      * Remove all positions from cart
+     *
+     * @return bool
      */
-    public function clear();
+    public function clear(): bool;
 }

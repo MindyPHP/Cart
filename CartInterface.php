@@ -63,6 +63,11 @@ interface CartInterface
     public function all(): array;
 
     /**
+     * @return bool
+     */
+    public function clear(): bool;
+
+    /**
      * @return int
      */
     public function getQuantity(): int;

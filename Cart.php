@@ -33,9 +33,9 @@ class Cart implements CartInterface
     /**
      * {@inheritdoc}
      */
-    public function clear()
+    public function clear(): bool
     {
-        $this->storage->clear();
+        return $this->storage->clear();
     }
 
     /**

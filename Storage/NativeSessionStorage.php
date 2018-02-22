@@ -74,9 +74,11 @@ class NativeSessionStorage implements CartStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function clear()
+    public function clear(): bool
     {
         $_SESSION[self::SESSION_KEY] = [];
+
+        return empty($_SESSION[self::SESSION_KEY]);
     }
 
     /**
