@@ -19,24 +19,27 @@ use PHPUnit\Framework\TestCase;
 
 abstract class AbstractSessionStorageTest extends TestCase
 {
-    abstract public function getStorage(): CartStorageInterface;
+    protected $product;
+
+    protected function setUp()
+    {
+        $this->product = $this
+            ->getMockBuilder(ProductInterface::class)
+            ->getMock();
+        $this->product->method('getPrice')->willReturn(100);
+        $this->product->method('getUniqueId')->willReturn('foobar');
+    }
 
     public function testStorage()
     {
-        $product = $this
-            ->getMockBuilder(ProductInterface::class)
-            ->getMock();
-        $product->method('getPrice')->willReturn(100);
-        $product->method('getUniqueId')->willReturn('foobar');
-
         $storage = $this->getStorage();
 
         $this->assertSame([], $storage->all());
         $this->assertNull($storage->get('foo'));
         $this->assertFalse($storage->has('foo'));
 
-        $uniqueId = Utils::doGenerateUniqueId($product);
-        $position = new Position($product);
+        $uniqueId = Utils::doGenerateUniqueId($this->product);
+        $position = new Position($this->product);
         $storage->set($uniqueId, $position);
 
         $this->assertCount(1, $storage->all());
@@ -53,4 +56,6 @@ abstract class AbstractSessionStorageTest extends TestCase
 
         $this->assertCount(0, $storage->all());
     }
+
+    abstract public function getStorage(): CartStorageInterface;
 }

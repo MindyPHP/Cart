@@ -12,77 +12,72 @@ declare(strict_types=1);
 namespace Mindy\Cart\Tests;
 
 use Mindy\Cart\Cart;
-use Mindy\Cart\Position;
+use Mindy\Cart\CartInterface;
 use Mindy\Cart\PositionInterface;
-use Mindy\Cart\ProductInterface;
 use Mindy\Cart\Storage\CartStorageInterface;
 use Mindy\Cart\Storage\SymfonySessionStorage;
 use Mindy\Cart\Utils;
-use PHPUnit\Framework\TestCase;
-use SebastianBergmann\CodeCoverage\Util;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
-class CartTest extends TestCase
+class CartTest extends AbstractSessionStorageTest
 {
-    protected function getProduct()
+    protected function createCart(): CartInterface
     {
-        $product = $this
-            ->getMockBuilder(ProductInterface::class)
-            ->getMock();
-        $product->method('getPrice')->willReturn(100);
-        $product->method('getUniqueId')->willReturn('foobar');
-
-        return $product;
+        return new Cart($this->getStorage());
     }
 
     public function testCart()
     {
-        $session = new Session(new MockArraySessionStorage());
-        $cart = new Cart(new SymfonySessionStorage($session));
+        $uniqueId = Utils::doGenerateUniqueId($this->product);
+
+        $cart = $this->createCart();
 
         $this->assertSame(0.0, $cart->getPrice());
         $this->assertSame(0, $cart->getQuantity());
-
         $this->assertCount(0, $cart->all());
 
-        $product = $this->getProduct();
-        $cart->add($product);
-
+        $cart->addProduct($this->product);
         $this->assertCount(1, $cart->all());
-        $this->assertTrue($cart->has($product));
-        $this->assertInstanceOf(PositionInterface::class, $cart->find($product));
         $this->assertSame(100.0, $cart->getPrice());
         $this->assertSame(1, $cart->getQuantity());
 
-        $cart->add($product);
+        $this->assertTrue($cart->hasProduct($this->product));
+        $this->assertTrue($cart->hasPosition($uniqueId));
+
+        $this->assertInstanceOf(PositionInterface::class, $cart->findPosition($this->product));
+
+        $cart->addProduct($this->product, 2);
+        $this->assertSame(3, $cart->getQuantity());
+
+        $cart->addProduct($this->product, 2, [], true);
         $this->assertSame(2, $cart->getQuantity());
 
-        $cart->add($product, 5, [], true);
-        $this->assertSame(5, $cart->getQuantity());
-
-        $cart->remove($product);
+        $cart->removeProduct($this->product);
         $this->assertCount(0, $cart->all());
-
-        $cart->add($product);
-        $this->assertCount(1, $cart->all());
 
         $cart->clear();
         $this->assertCount(0, $cart->all());
 
-        $cart->add($product);
-        $this->assertSame(1, $cart->getQuantity());
-
-        $uniqueId = Utils::doGenerateUniqueId($product);
-        $position = $cart->find($product);
+        $cart->addProduct($this->product);
+        $position = $cart->findPosition($this->product);
         $position->setQuantity(5);
-        $cart->replace($uniqueId, $position);
+        $cart->replacePosition($uniqueId, $position);
         $this->assertSame(5, $cart->getQuantity());
 
         $cart->setQuantity($uniqueId, 10);
         $this->assertSame(15, $cart->getQuantity());
 
-        $cart->setQuantity(Utils::doGenerateUniqueId($product), 10, true);
+        $cart->setQuantity($uniqueId, 10, true);
         $this->assertSame(10, $cart->getQuantity());
+
+        $cart->removePosition($uniqueId);
+        $this->assertSame(0, $cart->getQuantity());
+    }
+
+    public function getStorage(): CartStorageInterface
+    {
+        $session = new Session(new MockArraySessionStorage());
+        return new SymfonySessionStorage($session);
     }
 }
