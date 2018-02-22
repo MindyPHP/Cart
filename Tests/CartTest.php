@@ -17,7 +17,9 @@ use Mindy\Cart\PositionInterface;
 use Mindy\Cart\ProductInterface;
 use Mindy\Cart\Storage\CartStorageInterface;
 use Mindy\Cart\Storage\SymfonySessionStorage;
+use Mindy\Cart\Utils;
 use PHPUnit\Framework\TestCase;
+use SebastianBergmann\CodeCoverage\Util;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
@@ -45,29 +47,42 @@ class CartTest extends TestCase
         $this->assertCount(0, $cart->all());
 
         $product = $this->getProduct();
-        $position = new Position($product);
-        $cart->set($position->getUniqueId(), $position);
+        $cart->add($product);
 
         $this->assertCount(1, $cart->all());
-        $this->assertTrue($cart->has('091d0891163b8372709c08164bd4ee4b'));
-        $this->assertInstanceOf(PositionInterface::class, $cart->get('091d0891163b8372709c08164bd4ee4b'));
+        $this->assertTrue($cart->has($product));
+        $this->assertInstanceOf(PositionInterface::class, $cart->find($product));
         $this->assertSame(100.0, $cart->getPrice());
         $this->assertSame(1, $cart->getQuantity());
 
-        $cart->remove('091d0891163b8372709c08164bd4ee4b');
+        $cart->add($product);
+        $this->assertSame(2, $cart->getQuantity());
+
+        $cart->add($product, 5, [], true);
+        $this->assertSame(5, $cart->getQuantity());
+
+        $cart->remove($product);
         $this->assertCount(0, $cart->all());
 
-        $position = new Position($product);
-        $cart->set($position->getUniqueId(), $position);
+        $cart->add($product);
         $this->assertCount(1, $cart->all());
 
         $cart->clear();
         $this->assertCount(0, $cart->all());
 
-        $position = new Position($product);
-        $cart->set($position->getUniqueId(), $position);
+        $cart->add($product);
         $this->assertSame(1, $cart->getQuantity());
-        $cart->setQuantity('091d0891163b8372709c08164bd4ee4b', 2);
-        $this->assertSame(2, $cart->getQuantity());
+
+        $uniqueId = Utils::doGenerateUniqueId($product);
+        $position = $cart->find($product);
+        $position->setQuantity(5);
+        $cart->replace($uniqueId, $position);
+        $this->assertSame(5, $cart->getQuantity());
+
+        $cart->setQuantity($uniqueId, 10);
+        $this->assertSame(15, $cart->getQuantity());
+
+        $cart->setQuantity(Utils::doGenerateUniqueId($product), 10, true);
+        $this->assertSame(10, $cart->getQuantity());
     }
 }

@@ -44,12 +44,14 @@ class SymfonySessionStorage implements CartStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function remove(string $key)
+    public function remove(string $key): bool
     {
         $positions = $this->all();
         unset($positions[$key]);
 
         $this->session->set(self::SESSION_KEY, $positions);
+
+        return $this->has($key) === false;
     }
 
     /**
@@ -63,7 +65,7 @@ class SymfonySessionStorage implements CartStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function get(string $key)
+    public function get(string $key): ?PositionInterface
     {
         if ($this->has($key)) {
             $positions = $this->all();
@@ -85,11 +87,13 @@ class SymfonySessionStorage implements CartStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function set(string $key, PositionInterface $position)
+    public function set(string $key, PositionInterface $position): bool
     {
         $positions = $this->all();
         $positions[$key] = $position;
 
         $this->session->set(self::SESSION_KEY, $positions);
+
+        return $this->has($key);
     }
 }

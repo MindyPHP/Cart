@@ -32,7 +32,7 @@ class Position implements PositionInterface
      * @param int $quantity
      * @param array $options
      */
-    public function __construct(ProductInterface $product, int $quantity = 1, array $options = [])
+    public function __construct(ProductInterface $product, int $quantity = 1, ?array $options = [])
     {
         $this->product = $product;
         $this->quantity = $quantity;
@@ -42,9 +42,17 @@ class Position implements PositionInterface
     /**
      * {@inheritdoc}
      */
+    public function getTotalPrice(): float
+    {
+        return (float) $this->getPrice() * $this->getQuantity();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getPrice(): float
     {
-        return (float) $this->product->getPrice() * $this->quantity;
+        return $this->product->getPrice();
     }
 
     /**
@@ -61,14 +69,6 @@ class Position implements PositionInterface
     public function getProduct(): ProductInterface
     {
         return $this->product;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUniqueId(): string
-    {
-        return md5(sprintf("%s:%s", $this->product->getUniqueId(), serialize($this->options)));
     }
 
     /**

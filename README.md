@@ -9,7 +9,7 @@
 ## Установка
 
 ```bash
-composer require mindy/cart:"~1.0" --prefer-dist
+composer require mindy/cart --prefer-dist
 ```
 
 ## Использование
@@ -83,49 +83,49 @@ class SimpleProduct implements ProductInterface
 }
 ```
 
-Первый входящий аргумент это товар типа `ProductInterface`, далее количество товара и опции.
-
-```php
-use Mindy\Cart\Position;
-
-$product = new SimpleProduct(['price' => 100, 'uniqueId' => 'foo']);
-$position = new Position($product, 1, ['cpu' => 'xeon', 'memory' => '4']);
-$cart->set($position->generateUniqueId(), $position);
-```
-
-### Удаление позиции
-
-```php
-$cart->remove($key);
-```
-
-### Изменение количества
-
-```php
-// Обновление количества товара в позиции
-$position = $cart->getPosition('foo');
-$position->setQuantity(1);
-$cart->set($position->generateUniqueId(), $position);
-// или
-$cart->setQuantity('foo', 1);
-```
-
-### Опции 
+Использование
 
 ```php
 <?php
 
-use Mindy\Cart\Position;
-
+// Добавление позиции
 $product = new SimpleProduct(['price' => 100, 'uniqueId' => 'foo']);
+$quantity = 2;
+$options = ['cpu' => 'xeon', 'memory' => '4'];
+$cart->add($product, $quantity, $options);
+assert(1, count($cart->all()));
 
-$position = new Position($product, 1, ['cpu' => 'xeon', 'memory' => '4']);
-$cart->set($position->generateUniqueId(), $position);
+$cart->add($product, $quantity, $options);
+assert(2, count($cart->all()));
 
-$position = new Position($product, 1, ['cpu' => 'xeon', 'memory' => '2']);
-$cart->set($position->generateUniqueId(), $position);
+$cart->add($product, $quantity, $options, true); // Замена позиции
+assert(1, count($cart->all()));
 
-assert(2 === $cart->getQuantity());
+// Проверка наличия позиции
+$cart->has($product, $options);
+
+// Удаление позиции
+$cart->remove($product, $options);
+
+// Поиск позиции
+$position = $cart->find($product, $options);
+
+// Все позиции
+$cart->all();
+
+// Очистка
+$cart->clear();
+
+// Добавление количества
+$cart->setQuantity($key, 5);
+
+// Изменение количества
+$cart->setQuantity($key, 5, true);
+
+// Изменение количества - альтернативный вариант
+$position = $cart->get($key);
+$position->setQuantity($position->getQuantity() + 2);
+$cart->replace($key, $position);
 ```
 
 

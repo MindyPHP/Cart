@@ -16,20 +16,16 @@ use Mindy\Cart\PositionInterface;
 interface CartStorageInterface
 {
     /**
-     * @param string            $key
-     * @param PositionInterface $position
-     */
-    public function set(string $key, PositionInterface $position);
-
-    /**
      * @return array|PositionInterface[]
      */
     public function all(): array;
 
     /**
      * @param string $key
+     *
+     * @return bool
      */
-    public function remove(string $key);
+    public function remove(string $key): bool;
 
     /**
      * @param string $key
@@ -39,11 +35,19 @@ interface CartStorageInterface
     public function has(string $key): bool;
 
     /**
-     * @param $key
+     * @param string $key
+     * @param PositionInterface $position
      *
-     * @return PositionInterface
+     * @return bool
      */
-    public function get(string $key);
+    public function set(string $key, PositionInterface $position): bool;
+
+    /**
+     * @param string $key
+     *
+     * @return PositionInterface|null
+     */
+    public function get(string $key): ?PositionInterface;
 
     /**
      * Remove all positions from cart

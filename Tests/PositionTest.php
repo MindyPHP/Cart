@@ -10,6 +10,7 @@ namespace Mindy\Cart\Tests;
 
 use Mindy\Cart\Position;
 use Mindy\Cart\ProductInterface;
+use Mindy\Cart\Utils;
 use PHPUnit\Framework\TestCase;
 
 class PositionTest extends TestCase
@@ -31,14 +32,14 @@ class PositionTest extends TestCase
         $position = new Position($product);
 
         $this->assertInstanceOf(ProductInterface::class, $position->getProduct());
-        $this->assertSame('091d0891163b8372709c08164bd4ee4b', $position->getUniqueId());
 
         $this->assertSame(100.00, $position->getPrice());
         $this->assertSame(1, $position->getQuantity());
         $this->assertSame([], $position->getOptions());
 
         $position->setQuantity(2);
-        $this->assertSame(200.00, $position->getPrice());
+        $this->assertSame(100.00, $position->getPrice());
+        $this->assertSame(200.00, $position->getTotalPrice());
         $this->assertSame(2, $position->getQuantity());
         $this->assertSame([], $position->getOptions());
     }
@@ -46,10 +47,10 @@ class PositionTest extends TestCase
     public function testPositionOptions()
     {
         $product = $this->getProduct();
+        $uniqueId = Utils::doGenerateUniqueId($product);
         $position = new Position($product, 1, ['memory' => '2', 'cpu' => 'intel xeon']);
 
         $this->assertInstanceOf(ProductInterface::class, $position->getProduct());
-        $this->assertSame('a971f3a2fe71378f3a97dc454f770dc4', $position->getUniqueId());
 
         $this->assertSame(100.00, $position->getPrice());
         $this->assertSame(1, $position->getQuantity());
@@ -58,7 +59,7 @@ class PositionTest extends TestCase
         $position = new Position($product, 1, ['memory' => '4', 'cpu' => 'intel xeon']);
 
         $this->assertInstanceOf(ProductInterface::class, $position->getProduct());
-        $this->assertSame('30725a68944225e92af286ff31461711', $position->getUniqueId());
+        $this->assertSame('foobar_40cd750bba9870f18aada2478b24840a', $uniqueId);
 
         $this->assertSame(100.00, $position->getPrice());
         $this->assertSame(1, $position->getQuantity());

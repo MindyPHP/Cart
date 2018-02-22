@@ -21,6 +21,13 @@ interface PositionInterface
      *
      * @return float
      */
+    public function getTotalPrice(): float;
+
+    /**
+     * Return total price: product.price * quantity.
+     *
+     * @return float
+     */
     public function getPrice(): float;
 
     /**
@@ -32,11 +39,6 @@ interface PositionInterface
      * @return ProductInterface
      */
     public function getProduct(): ProductInterface;
-
-    /**
-     * @return string
-     */
-    public function getUniqueId(): string;
 
     /**
      * @param int $quantity

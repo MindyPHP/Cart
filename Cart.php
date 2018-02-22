@@ -33,9 +33,86 @@ class Cart implements CartInterface
     /**
      * {@inheritdoc}
      */
-    public function all(): array
+    public function clear()
     {
-        return $this->storage->all();
+        $this->storage->clear();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getStorage(): CartStorageInterface
+    {
+        return $this->storage;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function add(ProductInterface $product, int $quantity = 1, array $options = [], bool $replace = false): bool
+    {
+        if ($replace) {
+            $this->remove($product, $options);
+        }
+
+        if ($this->has($product, $options)) {
+            $position = $this->find($product, $options);
+            $position->setQuantity($position->getQuantity() + $quantity);
+        } else {
+            $position = $this->createPosition($product, $quantity, $options);
+        }
+
+        return $this->getStorage()->set(
+            $this->doGenerateUniqueId($product, $options),
+            $position
+        );
+    }
+
+    /**
+     * @param ProductInterface $product
+     * @param int $quantity
+     * @param array|null $options
+     *
+     * @return PositionInterface
+     */
+    protected function createPosition(ProductInterface $product, int $quantity, array $options = []): PositionInterface
+    {
+        return new Position($product, $quantity, $options);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function has(ProductInterface $product, array $options = []): bool
+    {
+        return $this->getStorage()->has($this->doGenerateUniqueId($product, $options));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get(string $key): ?PositionInterface
+    {
+        return $this->getStorage()->get($key);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function find(ProductInterface $product, array $options = []): ?PositionInterface
+    {
+        return $this->get($this->doGenerateUniqueId($product, $options));
+    }
+
+    /**
+     * @param ProductInterface $product
+     * @param array|null $options
+     *
+     * @return string
+     */
+    private function doGenerateUniqueId(ProductInterface $product, array $options = []): string
+    {
+        return Utils::doGenerateUniqueId($product, $options);
     }
 
     /**
@@ -49,7 +126,7 @@ class Cart implements CartInterface
     }
 
     /**
-     * @return float
+     * {@inheritdoc}
      */
     public function getPrice(): float
     {
@@ -59,55 +136,41 @@ class Cart implements CartInterface
     }
 
     /**
-     * @param $key
-     * @param PositionInterface $position
+     * {@inheritdoc}
      */
-    public function set(string $key, PositionInterface $position)
+    public function all(): array
     {
-        $this->storage->set($key, $position);
+        return $this->getStorage()->all();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function remove(string $key)
+    public function remove(ProductInterface $product, ?array $options = []): bool
     {
-        $this->storage->remove($key);
+        return $this->getStorage()->remove($this->doGenerateUniqueId($product, $options));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function has(string $key): bool
+    public function replace(string $key, PositionInterface $position): bool
     {
-        return $this->storage->has($key);
+        return $this->getStorage()->set($key, $position);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get(string $key)
+    public function setQuantity(string $key, int $quantity, bool $replace = false): bool
     {
-        return $this->storage->get($key);
-    }
+        $position = $this->getStorage()->get($key);
+        if ($replace) {
+            $position->setQuantity($quantity);
+        } else {
+            $position->setQuantity($position->getQuantity() + $quantity);
+        }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function clear()
-    {
-        $this->storage->clear();
-    }
-
-    /**
-     * @param string $key
-     * @param int $quantity
-     */
-    public function setQuantity(string $key, int $quantity)
-    {
-        $position = $this->get($key);
-        $position->setQuantity($quantity);
-
-        $this->storage->set($key, $position);
+        return $this->getStorage()->set($key, $position);
     }
 }
