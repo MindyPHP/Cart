@@ -49,6 +49,7 @@ class CartTest extends AbstractSessionStorageTest
 
         $cart->addProduct($this->product, 2);
         $this->assertSame(3, $cart->getQuantity());
+        $this->assertSame(300.0, $cart->getPrice());
 
         $cart->addProduct($this->product, 2, [], true);
         $this->assertSame(2, $cart->getQuantity());

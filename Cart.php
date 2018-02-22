@@ -127,7 +127,7 @@ class Cart implements CartInterface
     public function getPrice(): float
     {
         return array_sum(array_map(function (PositionInterface $position) {
-            return $position->getPrice();
+            return $position->getTotalPrice();
         }, $this->all()));
     }
 
